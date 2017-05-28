@@ -45,32 +45,27 @@ ini_set(“display_errors”, 0 );
                     <div class="sidebar-nav navbar-collapse">
                         <ul class="nav" id="side-menu">
                             <li>
-                                <a title="Geral" href="<?= base_url('overall');?>"><i class="fa fa-certificate fa-fw"></i> Geral</a>
+                                <a title="Parciais" href="#"><i class="fa fa-refresh fa-fw"></i> Parciais</a>
                             </li>
                         </ul>
                         <ul class="nav" id="side-menu">
                             <li>
-                                <a title="Mês" href="<?= base_url('month');?>"><i class="fa fa-calendar fa-fw"></i> Mês</a>
+                                <a title="Geral" href="#"><i class="fa fa-certificate fa-fw"></i> Ranking Geral</a>
                             </li>
                         </ul>
                         <ul class="nav" id="side-menu">
                             <li>
-                                <a title="Parciais" href="<?= base_url('partial');?>"><i class="fa fa-refresh fa-fw"></i> Parciais</a>
+                                <a title="Mês" href="#"><i class="fa fa-calendar fa-fw"></i> Ranking Mês</a>
                             </li>
                         </ul>
                         <ul class="nav" id="side-menu">
                             <li>
-                                <a title="Gerenciar" href="<?= base_url('manager');?>"><i class="fa fa-gear fa-fw"></i> Gerenciar</a>
+                                <a title="Banco" href="#"><i class="fa fa-usd fa-fw"></i> Banco</a>
                             </li>
                         </ul>
                         <ul class="nav" id="side-menu">
                             <li>
-                                <a title="Banco" href="<?= base_url('bank');?>"><i class="fa fa-usd fa-fw"></i> Banco</a>
-                            </li>
-                        </ul>
-                        <ul class="nav" id="side-menu">
-                            <li>
-                                <a title="Definições" href="<?= base_url('settings');?>"><i class="fa fa-user fa-fw"></i> Definições</a>
+                                <a title="Informações" href="#"><i class="fa fa-info fa-fw"></i> Informações</a>
                             </li>
                         </ul>
                     </div>

@@ -24,40 +24,6 @@ ini_set(“display_errors”, 0 );
     <body>
         <div id="wrapper">
             <div id="page-wrapper">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Time</th>
-                                            <th>Cartoleiro</th>
-                                            <th>Parcial</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Voe Bem</td>
-                                            <td>Thiago Pereira</td>
-                                            <td>50.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Dexolas Dexolas</td>
-                                            <td>Vinicius Anjos</td>
-                                            <td>45.17</td>
-                                        </tr>
-                                        <tr>
-                                            <td>JACUIPENSE FC</td>
-                                            <td>JOSEMAR GUIMARÃES</td>
-                                            <td>20.25</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 
             </div>
         </div>

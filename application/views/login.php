@@ -26,7 +26,7 @@ ini_set(“display_errors”, 0 );
                 <div class="col-md-4 col-md-offset-4">
                     <div class="login-panel panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Autenticação</h3>
+                            <h3 class="panel-title">Por favor, faça login</h3>
                         </div>
                         <div class="panel-body">
                             <?php if($loginfail != null){ ?>
