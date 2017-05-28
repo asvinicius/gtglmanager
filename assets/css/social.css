@@ -1,0 +1,5 @@
+.associated{border-bottom:1px solid #efefef;color:#666;display:none;font-family:Arial;font-size:14px;overflow:hidden;padding-bottom:40px}
+.associated .texto-confirmacao{float:left;line-height:25px;padding-left:15px}
+.associated .texto-explicacao{clear:both;margin-top:101px}
+@media only screen and (max-width:730px){.titulo-modulo{display:none!important}
+}
