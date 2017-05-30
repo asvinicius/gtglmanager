@@ -50,22 +50,22 @@ ini_set(“display_errors”, 0 );
                         </ul>
                         <ul class="nav" id="side-menu">
                             <li>
-                                <a title="Geral" href="#"><i class="fa fa-certificate fa-fw"></i> Ranking Geral</a>
+                                <a title="Geral" href="<?= base_url('overall');?>"><i class="fa fa-list-ol fa-fw"></i> Ranking Geral</a>
                             </li>
                         </ul>
                         <ul class="nav" id="side-menu">
                             <li>
-                                <a title="Mês" href="#"><i class="fa fa-calendar fa-fw"></i> Ranking Mês</a>
+                                <a title="Mês" href="<?= base_url('monthly');?>"><i class="fa fa-calendar fa-fw"></i> Ranking Mês</a>
                             </li>
                         </ul>
                         <ul class="nav" id="side-menu">
                             <li>
-                                <a title="Banco" href="#"><i class="fa fa-usd fa-fw"></i> Banco</a>
+                                <a title="Banco" href="<?= base_url('bank');?>"><i class="fa fa-usd fa-fw"></i> Banco</a>
                             </li>
                         </ul>
                         <ul class="nav" id="side-menu">
                             <li>
-                                <a title="Informações" href="#"><i class="fa fa-info fa-fw"></i> Informações</a>
+                                <a title="Informações" href="<?= base_url('report');?>"><i class="fa fa-info fa-fw"></i> Informações</a>
                             </li>
                         </ul>
                     </div>

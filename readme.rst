@@ -25,4 +25,10 @@ Versão 1.0.0 ----------------------------------------------
 * Adicionados arquivos necessários para o desenvolvimento;
 #
 #
+#Versão 1.0.1 ----------------------------------------------
+* Informações de ranking atualizadas de acordo com a API;
+* Informações sobre as cotas pagas;
+* Informações sobre campeões e lanternas da liga atualizadas de acordo com a API (Em desenvolvimento);
+#
+#
 #

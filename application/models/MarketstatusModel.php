@@ -1,12 +1,14 @@
 <?php
 class MarketstatusModel extends CI_Model{
     protected $idmktstatus;
+    protected $currentmonth;
     protected $currentround;
     protected $marketstatus;
     
     function MarketstatusModel() {
         parent::__construct();
         $this->setIdmktstatus(null);
+        $this->setCurrentmonth(null);
         $this->setCurrentround(null);
         $this->setMarketstatus(null);
     }
@@ -29,6 +31,10 @@ class MarketstatusModel extends CI_Model{
         return $this->idmktstatus;
     }
 
+    function getCurrentmonth() {
+        return $this->currentmonth;
+    }
+
     function getCurrentround() {
         return $this->currentround;
     }
@@ -39,6 +45,10 @@ class MarketstatusModel extends CI_Model{
 
     function setIdmktstatus($idmktstatus) {
         $this->idmktstatus = $idmktstatus;
+    }
+
+    function setCurrentmonth($currentmonth) {
+        $this->currentmonth = $currentmonth;
     }
 
     function setCurrentround($currentround) {

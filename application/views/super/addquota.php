@@ -13,7 +13,7 @@ ini_set(“display_errors”, 0 );
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
         <meta name="author" content="">
-        
+
         <link href="<?= base_url('assets/vendor/bootstrap/css/bootstrap.min.css');?>" rel="stylesheet">
         <link href="<?= base_url('assets/vendor/metisMenu/metisMenu.min.css');?>" rel="stylesheet">
         <link href="<?= base_url('assets/dist/css/sb-admin-2.css');?>" rel="stylesheet">
@@ -22,30 +22,34 @@ ini_set(“display_errors”, 0 );
     </head>
 
     <body>
+
         <div id="wrapper">
-                <div class="col-md-4 col-md-offset-4">
-                    <div class="login-panel panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Por favor, faça login</h3>
-                        </div>
-                        <div class="panel-body">
-                            <?php if($loginfail != null){ ?>
-                                <div class="alert alert-<?php echo $loginfail["class"]; ?>"> <?php echo $loginfail["message"]; ?> </div>
-                            <?php } ?>
-                            <form method="get" action="<?= base_url('login/signin');?>" >
-                                <fieldset>
-                                    <div class="form-group">
-                                        <input class="form-control" placeholder="E-mail" name="email" type="email" autofocus>
-                                    </div>
-                                    <div class="form-group">
-                                        <input class="form-control" placeholder="Senha" name="password" type="password" value="">
-                                    </div>
-                                    <button type="submit" class="btn btn-lg btn-success btn-block">Entrar</button>
-                                </fieldset>
-                            </form>
-                        </div>
+
+            <div id="page-wrapper">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">Adicionar cota</h1>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <form role="form" method="get" action="<?= base_url('bank/savequota'); ?>">
+                            <div class="form-group">
+                                <label for="league">Cartoleiro</label>
+                                <select class="form-control" id="team" name="team" required="true">
+                                    <option value="0">    </option>
+                                    <?php foreach ($teams as $team){ ?>
+                                        <option value="<?= $team->idteam; ?>"> <?php echo $team->namecoach; ?> </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-success">Adicionar</button>
+                            <a class="btn btn-danger" href="<?= base_url('bank/cancel'); ?>">Cancelar</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
         </div>
         
         <script src="<?= base_url('assets/vendor/jquery/jquery.min.js');?>"></script>
@@ -56,4 +60,5 @@ ini_set(“display_errors”, 0 );
         <script src="<?= base_url('assets/data/morris-data.js');?>"></script>
         <script src="<?= base_url('assets/dist/js/sb-admin-2.js');?>"></script>
     </body>
+
 </html>
