@@ -27,6 +27,22 @@ ini_set(“display_errors”, 0 );
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">Bem vindo</h1>
+                        <?php if($status){
+                            switch ($status) {
+                                case 1: ?>
+                                    <div class="alert alert-success text-center">
+                                        MERCADO ABERTO!
+                                    </div>
+                                <?php
+                                break;
+                                case 2: ?>
+                                    <div class="alert alert-danger text-center">
+                                        MERCADO FECHADO!
+                                    </div>
+                                <?php
+                                break;
+                            }
+                        }?>
                     </div>
                 </div>
                 <div class="row">

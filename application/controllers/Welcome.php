@@ -6,31 +6,76 @@ class Welcome extends CI_Controller {
     public function index(){
         if($this->islogged()){
             
-            if($this->needsupdating()){
-                $this->updatedatabase();
-            }else{
+            if($this->uptodate()){
+                $json = $this->getstatus();
+                $delivery = $json['status_mercado'];
+                $msg = array("status" => $delivery);
+                
                 $this->load->view('template/header');
-                $this->load->view('super/home');
-            }            
+                $this->load->view('super/home', $msg);
+            }
         }
+    }
+    
+    public function uptodate() {
+        $this->load->model('MarketstatusModel');
+        $status = new MarketstatusModel();
+        
+        $mktstat = $status->search();
+        $json = $this->getstatus();
+        
+        if($json['rodada_atual'] == $mktstat['currentround']){
+            if($json['status_mercado'] == $mktstat['marketstatus']){
+                return true;
+            }else{
+                return $this->updatedatabase();
+            }
+        }else{
+            return $this->updatedatabase();
+        }
+    }
+    
+    public function getstatus() {
+        
+        $url = 'https://api.cartolafc.globo.com/mercado/status';
+        
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL,$url);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER ,[
+          'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
+          'Content-Type: application/json',
+        ]);
+        $result = curl_exec($ch);
+        
+        if ($result === FALSE) {
+            die(curl_error($ch));
+        }
+        
+        curl_close($ch);
+        
+        $json = json_decode($result, true);
+        
+        return $json;
     }
     
     public function updatedatabase() {
-        $this->checknewteam();
-        $this->checkoverall();
-        $this->checkbank();
-        $this->checkinfo();
+        $league = $this->getleague();
         
-        if($this->setstatus()){
-            redirect(base_url('welcome'));
+        $this->checknewteam($league);
+        $this->checkoverall($league);
+        $this->checkbank($league);
+        $this->checkinfo($league);
+        
+        if($this->setstatus($league)){
+            return true;
         }
     }
     
-    public function checknewteam() {
+    public function checknewteam($league) {
         $this->load->model('TeamModel');
         $team = new TeamModel();
-        
-        $league = $this->getleague();
         
         foreach ($league['times'] as $leagueteam) {
             $aux = $team->search($leagueteam['time_id']);
@@ -47,11 +92,9 @@ class Welcome extends CI_Controller {
         }
     }
     
-    public function checkoverall() {
+    public function checkoverall($league) {
         $this->load->model('RankingModel');
         $ranking = new RankingModel();
-        
-        $league = $this->getleague();
         
         foreach ($league['times'] as $leagueteam) {
             $aux = $ranking->search($leagueteam['time_id'], 0);
@@ -101,7 +144,7 @@ class Welcome extends CI_Controller {
         }
     }
     
-    public function checkbank() {
+    public function checkbank($league) {
         $this->load->model('MarketstatusModel');
         $mktstatus = new MarketstatusModel();
         $this->load->model('WalletModel');
@@ -109,22 +152,22 @@ class Welcome extends CI_Controller {
         
         $current = $mktstatus->search();
         
-        $verify = $wallet->search($current['currentmonth']-1);
-        
-        if($verify['premium'] == 0){
-        
-            $total = $wallet->search(0);
+        if($league['ranking']['mes'] != $current['currentmonth']){
+            $verify = $wallet->search($current['currentmonth']);
 
-            $totaldata['idwallet'] = $total['idwallet'];
-            $totaldata['reference'] = $total['reference'];
-            $totaldata['collected'] = $total['collected'];
-            $totaldata['premium'] = $total['premium']+105;
-            $totaldata['accumulated'] = $total['accumulated']-105;
+            if($verify['premium'] == 0){
 
-            if($wallet->update($totaldata)){
-                $finished = $wallet->search($current['currentmonth']-1);
+                $total = $wallet->search(0);
 
-                if($finisheddata){
+                $totaldata['idwallet'] = $total['idwallet'];
+                $totaldata['reference'] = $total['reference'];
+                $totaldata['collected'] = $total['collected'];
+                $totaldata['premium'] = $total['premium']+105;
+                $totaldata['accumulated'] = $total['accumulated']-105;
+
+                if($wallet->update($totaldata)){
+                    $finished = $wallet->search($current['currentmonth']);
+
                     $finisheddata['idwallet'] = $finished['idwallet'];
                     $finisheddata['reference'] = $finished['reference'];
                     $finisheddata['collected'] = $finished['collected'];
@@ -138,52 +181,54 @@ class Welcome extends CI_Controller {
         }
     }
     
-    public function checkinfo() {
-        $this->load->model('MarketstatusModel');
-        $mktstatus = new MarketstatusModel();
-        $this->load->model('CurrentModel');
-        $current = new CurrentModel();
+    public function checkinfo($league) {
+        $this->load->model('RankingModel');
+        $this->load->model('DetailModel');
+        $this->load->model('TeamModel');
         
-        $status = $mktstatus->search();
+        $ranking = new RankingModel();
+        $detail = new DetailModel();
+        $team = new TeamModel();
         
-        if($status['currentmonth']>1){
-            $info = $current->search($status['currentmonth']-1);
-            if(!$info){
-                
-            }
-        }else{
+        if($league['ranking']['mes'] != $current['currentmonth']){
+            $finished = $ranking->listing(1);
             
+            $detaildata['iddetail'] = null;
+            $detaildata['month'] = $current['currentmonth'];
+            
+            $cont = 1;
+            
+            foreach ($finished as $value) {
+                switch ($cont) {
+                    case 1:
+                        $obj = $team->search($value['team']);
+                        $detaildata['champion'] = $obj['namecoach'];
+                        break;
+                    case 7:
+                        $obj = $team->search($value['team']);
+                        $detaildata['worse'] = $obj['namecoach'];
+                        break;
+                }
+                $cont++;
+            }
         }
     }
     
-    public function setstatus() {
-        
+    public function setstatus($league) {
         $this->load->model('MarketstatusModel');
         $status = new MarketstatusModel();
         
-        $url = 'https://api.cartolafc.globo.com/mercado/status';
+        $json = $this->getstatus();
         
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL,$url);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER ,[
-          'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
-          'Content-Type: application/json',
-        ]);
-        $result = curl_exec($ch);
-        
-        if ($result === FALSE) {
-            die(curl_error($ch));
+        $aux = null;
+        foreach ($league['times'] as $value) {
+            $aux = $value['ranking']['mes'];
         }
-        
-        curl_close($ch);
-        
-        $json = json_decode($result, true);
         
         $mktstat = $status->search();
         
         $mktsdata['idmktstatus'] = $mktstat['idmktstatus'];
+        $mktsdata['currentmonth'] = $aux;
         $mktsdata['currentround'] = $json['rodada_atual'];
         $mktsdata['marketstatus'] = $json['status_mercado'];
         
@@ -192,43 +237,7 @@ class Welcome extends CI_Controller {
         }
     }
     
-    public function needsupdating() {
-        
-        $this->load->model('MarketstatusModel');
-        $status = new MarketstatusModel();
-        
-        $url = 'https://api.cartolafc.globo.com/mercado/status';
-        
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL,$url);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER ,[
-          'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
-          'Content-Type: application/json',
-        ]);
-        $result = curl_exec($ch);
-        
-        if ($result === FALSE) {
-            die(curl_error($ch));
-        }
-        
-        curl_close($ch);
-        
-        $json = json_decode($result, true);
-        
-        $mktstat = $status->search();
-        
-        if($mktstat['currentround'] == $json['rodada_atual']){
-            if($mktstat['marketstatus'] == $json['status_mercado']){
-                return false;
-            }else{
-                return true;
-            }
-        }else{
-            return true;
-        }
-    }
+    
     
     public function getleague() {
         

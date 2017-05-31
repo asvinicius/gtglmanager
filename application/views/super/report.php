@@ -30,7 +30,7 @@ ini_set(“display_errors”, 0 );
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-8">
+                    <div class="col-lg-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <i class="fa fa-check fa-fw"></i> Conclusões                            
@@ -41,9 +41,9 @@ ini_set(“display_errors”, 0 );
                                         <?php if($detail){ ?>
                                             <thead>
                                                 <tr>
-                                                    <th title="Mês">#</th>
-                                                    <th title="Campeão">Cartoleiro</th>
-                                                    <th title="Lanterna">Time</th>
+                                                    <th title="Mês">Mês</th>
+                                                    <th title="Campeão">Campeão</th>
+                                                    <th title="Lanterna">Lanterna</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -91,47 +91,6 @@ ini_set(“display_errors”, 0 );
                                             echo '<h4>Sem informação disponível.</h4>';
                                         }?>
                                     </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <i class="fa fa-bar-chart-o fa-fw"></i> Estatísticas
-                            </div>
-                            <div class="panel-body">
-                                <div class="list-group">
-                                    <a href="#" class="list-group-item">
-                                        <i class="fa fa-trophy fa-fw"></i> Ultimo campeão
-                                        <span class="pull-right text-muted small"><em>4 minutes ago</em>
-                                        </span>
-                                    </a>
-                                    <a href="#" class="list-group-item">
-                                        <i class="fa fa-trash fa-fw"></i> Ultimo lanterna
-                                        <span class="pull-right text-muted small"><em>12 minutes ago</em>
-                                        </span>
-                                    </a>
-                                    <a href="#" class="list-group-item">
-                                        <i class="fa fa-plus fa-fw"></i> Maior pontuação
-                                        <span class="pull-right text-muted small"><em>27 minutes ago</em>
-                                        </span>
-                                    </a>
-                                    <a href="#" class="list-group-item">
-                                        <i class="fa fa-minus fa-fw"></i> Pior pontuação
-                                        <span class="pull-right text-muted small"><em>43 minutes ago</em>
-                                        </span>
-                                    </a>
-                                    <a href="#" class="list-group-item">
-                                        <i class="fa fa-thumbs-o-up fa-fw"></i> Mais vezes campeão
-                                        <span class="pull-right text-muted small"><em>11:32 AM</em>
-                                        </span>
-                                    </a>
-                                    <a href="#" class="list-group-item">
-                                        <i class="fa fa-thumbs-o-down fa-fw"></i> Mais vezes lanterna
-                                        <span class="pull-right text-muted small"><em>11:13 AM</em>
-                                        </span>
-                                    </a>
                                 </div>
                             </div>
                         </div>

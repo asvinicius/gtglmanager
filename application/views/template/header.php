@@ -26,12 +26,6 @@ ini_set(“display_errors”, 0 );
         <div id="wrapper">
             <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
                     <a class="navbar-brand" title="GT BET" href="<?= base_url();?>">GT Grades League</a>
                 </div>
                  <ul class="nav navbar-top-links navbar-right">
@@ -45,7 +39,7 @@ ini_set(“display_errors”, 0 );
                     <div class="sidebar-nav navbar-collapse">
                         <ul class="nav" id="side-menu">
                             <li>
-                                <a title="Parciais" href="#"><i class="fa fa-refresh fa-fw"></i> Parciais</a>
+                                <a title="Parciais" href="<?= base_url('partial');?>"><i class="fa fa-refresh fa-fw"></i> Parciais</a>
                             </li>
                         </ul>
                         <ul class="nav" id="side-menu">
