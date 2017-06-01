@@ -65,7 +65,6 @@ class Welcome extends CI_Controller {
         
         $this->checknewteam($league);
         $this->checkoverall($league);
-        $this->checkbank($league);
         $this->checkinfo($league);
         
         if($this->setstatus($league)){
@@ -144,43 +143,6 @@ class Welcome extends CI_Controller {
         }
     }
     
-    public function checkbank($league) {
-        $this->load->model('MarketstatusModel');
-        $mktstatus = new MarketstatusModel();
-        $this->load->model('WalletModel');
-        $wallet = new WalletModel();
-        
-        $current = $mktstatus->search();
-        
-        if($league['ranking']['mes'] != $current['currentmonth']){
-            $verify = $wallet->search($current['currentmonth']);
-
-            if($verify['premium'] == 0){
-
-                $total = $wallet->search(0);
-
-                $totaldata['idwallet'] = $total['idwallet'];
-                $totaldata['reference'] = $total['reference'];
-                $totaldata['collected'] = $total['collected'];
-                $totaldata['premium'] = $total['premium']+105;
-                $totaldata['accumulated'] = $total['accumulated']-105;
-
-                if($wallet->update($totaldata)){
-                    $finished = $wallet->search($current['currentmonth']);
-
-                    $finisheddata['idwallet'] = $finished['idwallet'];
-                    $finisheddata['reference'] = $finished['reference'];
-                    $finisheddata['collected'] = $finished['collected'];
-                    $finisheddata['premium'] = $finished['premium']+105;
-                    $finisheddata['accumulated'] = $finished['accumulated']-105;
-
-                    if($wallet->update($finisheddata)){
-                    }
-                }
-            }
-        }
-    }
-    
     public function checkinfo($league) {
         $this->load->model('RankingModel');
         $this->load->model('DetailModel');
@@ -195,6 +157,8 @@ class Welcome extends CI_Controller {
             
             $detaildata['iddetail'] = null;
             $detaildata['month'] = $current['currentmonth'];
+            $detaildata['champion'] = null;
+            $detaildata['worse'] = null;
             
             $cont = 1;
             
@@ -211,6 +175,8 @@ class Welcome extends CI_Controller {
                 }
                 $cont++;
             }
+            
+            $detail->save($detaildata);
         }
     }
     

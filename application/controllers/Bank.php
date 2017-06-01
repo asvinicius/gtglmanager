@@ -124,6 +124,49 @@ class Bank extends CI_Controller {
         }
     }
     
+    public function conclude($reference) {
+        $this->load->model('WalletModel');
+        $this->load->model('PaymentModel');
+        
+        $wallet = new WalletModel();
+        $payment = new PaymentModel();
+        
+        $total = $wallet->search(0);
+        
+        $totaldata['idwallet'] = $total['idwallet'];
+        $totaldata['reference'] = $total['reference'];
+        $totaldata['collected'] = $total['collected'];
+        $totaldata['premium'] = $total['premium']+105;
+        $totaldata['accumulated'] = $total['accumulated']-105;
+        
+        if($wallet->update($totaldata)){
+            $current = $wallet->search($reference);
+            
+            $currentdata['idwallet'] = $current['idwallet'];
+            $currentdata['reference'] = $current['reference'];
+            $currentdata['collected'] = $current['collected'];
+            $currentdata['premium'] = $current['premium']+105;
+            $currentdata['accumulated'] = $current['accumulated']-105;
+            
+            if($wallet->update($currentdata)){                
+                for($i = 1; $i<8; $i++){
+                    
+                    $value = $payment->searchpayment($i);
+                    
+                    $paymentdata['idpayment'] = $value['idpayment'];
+                    $paymentdata['team'] = $value['team'];
+                    $paymentdata['amount'] = $value['amount']+1;
+
+                    if($payment->update($paymentdata)){
+                    }
+                }
+                redirect(base_url('bank'));
+            }
+            
+        }
+        
+    }
+    
     public function cancel() {
         redirect(base_url('bank'));            
     }

@@ -144,11 +144,13 @@ ini_set(“display_errors”, 0 );
                                                         <td><?php echo "R$ ".$reg->premium.",00" ?></td>
                                                         <td><?php echo "R$ ".$reg->accumulated.",00" ?></td>
                                                         <td><?php 
-                                                                if($reg->reference < $current['currentmonth']){
+                                                                if($reg->premium > 0){
                                                                     echo '<p class="fa fa-check" title="Concluído"></p>';
-                                                                }else{
-                                                                    echo '<p class="fa fa-ellipsis-h" title="Em andamento"></p>';
-                                                                }
+                                                                }else{ ?>
+                                                                    <a href="<?= base_url('bank/conclude/'.$reg->reference); ?>" onclick="return confirm('Tem certeza que deseja finalizar o mês?.');">
+                                                                        <i title="Finalizar" class="fa fa-power-off fa-fw"></i>
+                                                                    </a>
+                                                                <?php }
                                                             ?>
                                                         </td>
                                                     </tr>

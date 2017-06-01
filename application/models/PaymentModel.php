@@ -38,13 +38,19 @@ class PaymentModel extends CI_Model{
     }
     
     public function listing() {
+        $this->db->select('*');
         $this->db->join('team', 'team.idteam=team', 'inner');
-        $this->db->order_by("namecoach", "desc");
+        $this->db->order_by("namecoach", "asc");
         return $this->db->get("payment")->result();
     }
     
     public function search($idteam) {
         $this->db->where("team", $idteam);
+        return $this->db->get("payment")->row_array();
+    }
+    
+    public function searchpayment($idpayment) {
+        $this->db->where("idpayment", $idpayment);
         return $this->db->get("payment")->row_array();
     }
     

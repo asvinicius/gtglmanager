@@ -64,7 +64,7 @@ ini_set(“display_errors”, 0 );
                                                 <?php } ?>
                                             </tbody>
                                         <?php }else{
-                                            echo '<h4>Não há nenhum time cadastrado no sistema.</h4>';
+                                            echo '<h4>Indisponível.</h4>';
                                         }?>
                                     </table>
                                 </div>
@@ -108,7 +108,7 @@ ini_set(“display_errors”, 0 );
                                                     } ?>
                                             </tbody>
                                         <?php }else{
-                                            echo '<h4>Não há nenhum time cadastrado no sistema.</h4>';
+                                            echo '<h4>Indisponível.</h4>';
                                         }?>
                                     </table>
                                 </div>
