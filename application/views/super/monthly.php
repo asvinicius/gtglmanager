@@ -48,12 +48,16 @@ ini_set(“display_errors”, 0 );
                                     <tbody>
                                         <?php
                                             $cont = 1;
+                                            $final = 0;
+                                            foreach ($ranking as $ranked) {
+                                                $final = $final+1;
+                                            }
                                             foreach ($ranking as $ranked){ ?>
                                         <tr <?php switch ($cont) {
                                                             case 1:
                                                                 echo 'class="success"';
                                                                 break;
-                                                            case 7:
+                                                            case $final:
                                                                 echo 'class="danger"';
                                                                 break;
                                                         } ?>>

@@ -35,18 +35,12 @@ ini_set(“display_errors”, 0 );
                     <div class="col-lg-7">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                Parcial da rodada
-                                <div class="pull-right">
-                                    <a class="dropdown-toggle" title="Visão geral" href="<?= base_url('partial/general');?>">
-                                        <i class="fa fa-list-ul fa-fw"></i>
-                                    </a>
-                                </div>
-                                
+                                Parcial da rodada                                
                             </div>
                             <div class="panel-body">
                                 <div class="table-responsive">
                                     <table class="table">
-                                        <?php if($teams){ ?>
+                                        <?php if($partial){ ?>
                                             <thead>
                                                 <tr>
                                                     <th>Time</th>
@@ -55,7 +49,7 @@ ini_set(“display_errors”, 0 );
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php foreach ($teams as $team){ ?>
+                                                <?php foreach ($partial as $team){ ?>
                                                     <tr>
                                                         <td><?php echo $team['nome']; ?></td>
                                                         <td><?php echo $team['cartoleiro']; ?></td>
@@ -74,43 +68,89 @@ ini_set(“display_errors”, 0 );
                     <div class="col-lg-5">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                Parcial do mês
+                                Ranking
                             </div>
                             <div class="panel-body">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <?php if($ranking){ ?>
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Time</th>
-                                                    <th>Pontuação</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php
-                                                    $cont = 1;
-                                                    foreach ($ranking as $ranked){ ?>
-                                                <tr <?php switch ($cont) {
-                                                                    case 1:
-                                                                        echo 'class="success"';
-                                                                        break;
-                                                                    case 7:
-                                                                        echo 'class="danger"';
-                                                                        break;
-                                                                } ?>>
-                                                        <td><?php echo $cont; ?></td>
-                                                        <td><?php echo $ranked['nome']; ?></td>
-                                                        <td><?php echo $ranked['pontos']['mes']; ?></td>
-                                                    </tr>
-                                                <?php $cont++;
-                                                
-                                                    } ?>
-                                            </tbody>
-                                        <?php }else{
-                                            echo '<h4>Indisponível.</h4>';
-                                        }?>
-                                    </table>
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#month" data-toggle="tab">Mes</a></li>
+                                    <li><a href="#overall" data-toggle="tab">Campeonato</a></li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane fade in active" id="month">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <?php if($month){ ?>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Time</th>
+                                                            <th>Pontuação</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php
+                                                            $cont = 1;
+                                                            $final = 0;
+                                                            foreach ($month as $ranked) {
+                                                                $final = $final+1;
+                                                            }
+                                                            foreach ($month as $ranked){ ?>
+                                                        <tr <?php switch ($cont) {
+                                                                            case 1:
+                                                                                echo 'class="success"';
+                                                                                break;
+                                                                            case $final:
+                                                                                echo 'class="danger"';
+                                                                                break;
+                                                                        } ?>>
+                                                                <td><?php echo $cont; ?></td>
+                                                                <td><?php echo $ranked['nome']; ?></td>
+                                                                <td><?php echo $ranked['pontos']['mes']; ?></td>
+                                                            </tr>
+                                                        <?php $cont++;
+
+                                                            } ?>
+                                                    </tbody>
+                                                <?php }else{
+                                                    echo '<h4>Indisponível.</h4>';
+                                                }?>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="overall">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <?php if($overall){ ?>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Time</th>
+                                                            <th>Pontuação</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php
+                                                            $cont = 1;
+                                                            foreach ($overall as $ranked){ ?>
+                                                            <tr <?php switch ($cont) {
+                                                                            case 1:
+                                                                                echo 'class="success"';
+                                                                                break;
+                                                                        } ?>>
+                                                                <td><?php echo $cont; ?></td>
+                                                                <td><?php echo $ranked['nome']; ?></td>
+                                                                <td><?php echo $ranked['pontos']['campeonato']; ?></td>
+                                                            </tr>
+                                                        <?php $cont++;
+
+                                                            } ?>
+                                                    </tbody>
+                                                <?php }else{
+                                                    echo '<h4>Indisponível.</h4>';
+                                                }?>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

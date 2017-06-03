@@ -13,16 +13,15 @@ class Partial extends CI_Controller {
                     $this->load->view('super/unavailable');
                     break;
                 case 2:
-                    $this->load->view('super/partial');
+                    $partial = $this->listpartial();
+                    $month = $this->monthpartial($partial);
+                    $overall = $this->overallpartial($partial);
+                    
+                    $msg = array("partial" => $partial, "month" => $month, "overall" => $overall);
+                    
+                    $this->load->view('super/partial', $msg);
                     break;
             }
-        }
-    }
-    
-    public function general(){
-        if($this->islogged()){
-            $this->load->view('template/header');
-            $this->load->view('super/general');
         }
     }
     
@@ -51,125 +50,39 @@ class Partial extends CI_Controller {
         return $json;
     }
     
-    public function monthpartial($partial) {
-        $url = 'https://api.cartolafc.globo.com/auth/liga/gt-grades-league-2017';
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_POST, false);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
-        curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-        curl_setopt($ch, CURLOPT_HTTPHEADER ,[
-          'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
-          'Content-Type: application/json',
-          'X-GLB-Token: '.$this->session->userdata('glbId'),
-        ]);
-        $result = curl_exec($ch);
-        
-        if ($result === FALSE) {
-            die(curl_error($ch));
-        }
-        
-        curl_close($ch);
-        
-        $json = json_decode($result, true);
-        
-        $t = array();
-        
-        $c = 0;        
-        foreach ($json['times'] as $equipe) {
-            $t[$c] = $equipe;
-            $c++;
-        }
-        
-        foreach ($partial as $team) {
-            for($i = 0; $i<7; $i++){
-                if($t[$i]['nome'] == $team['nome']){
-                    $t[$i]['pontos']['mes'] = $t[$i]['pontos']['mes'] + $team['parcial'];
-                }
-            }
-        }
-        
-        for($i = 0; $i<6; $i++){
-            for($j = $i+1; $j<7; $j++){
-                if($t[$j]['pontos']['mes'] > $t[$i]['pontos']['mes']){
-                    $aux = $t[$i];
-                    $t[$i] = $t[$j];
-                    $t[$j] = $aux;
-                }
-            }
-        }
-        
-        for($i = 0; $i<7; $i++){
-            $t[$i]['pontos']['mes'] = number_format($t[$i]['pontos']['mes'], 2);
-        }
-        
-        $ranking = array(
-                "t1" => $t[0],
-                "t2" => $t[1],
-                "t3" => $t[2],
-                "t4" => $t[3],
-                "t5" => $t[4],
-                "t6" => $t[5],
-                "t7" => $t[6]);
-        
-        return $ranking;
-        
-    }
-    
     public function listpartial() {
+        $this->load->model('TeamModel');
+        $team = new TeamModel();
         
-        $seco = $this->getSquad("chola-mais-ac");
-        $galego = $this->getSquad("estacao-united-clube");
-        $josemar = $this->getSquad("jacuipense-fc");
-        $pereira = $this->getSquad("voe-bem");
-        $thiaguinho = $this->getSquad("thiko-ac");
-        $vinicius = $this->getSquad("dexolas-dexolas");
-        $wellington = $this->getSquad("basel-fc");
-       
-        $cholamais = array(
-                    "nome" => $seco['time']['nome'],
-                    "cartoleiro" => $seco['time']['nome_cartola'],
-                    "parcial" => $this->getPartial($seco['atletas']));
-        $estacaoutd = array(
-                    "nome" => $galego['time']['nome'],
-                    "cartoleiro" => $galego['time']['nome_cartola'],
-                    "parcial" => $this->getPartial($galego['atletas']));
-        $jacuipense = array(
-                    "nome" => $josemar['time']['nome'],
-                    "cartoleiro" => $josemar['time']['nome_cartola'],
-                    "parcial" => $this->getPartial($josemar['atletas']));
-        $voebem = array(
-                    "nome" => $pereira['time']['nome'],
-                    "cartoleiro" => $pereira['time']['nome_cartola'],
-                    "parcial" => $this->getPartial($pereira['atletas']));
-        $thikoac = array(
-                    "nome" => $thiaguinho['time']['nome'],
-                    "cartoleiro" => $thiaguinho['time']['nome_cartola'],
-                    "parcial" => $this->getPartial($thiaguinho['atletas']));
-        $dexolas = array(
-                    "nome" => $vinicius['time']['nome'],
-                    "cartoleiro" => $vinicius['time']['nome_cartola'],
-                    "parcial" => $this->getPartial($vinicius['atletas']));
-        $baselfc = array(
-                    "nome" => $wellington['time']['nome'],
-                    "cartoleiro" => $wellington['time']['nome_cartola'],
-                    "parcial" => $this->getPartial($wellington['atletas']));
-                
+        $finished = $team->listing();
+        $final = 0;
+        foreach ($finished as $value) {
+            $final = $final+1;
+        }
+        
+        $squad = array();
+        
+        $c = 0;
+        foreach ($finished as $value) {
+            for($i = 0; $i<$final; $i++){
+                if($c == $i){
+                    $squad[$i] = $this->getSquad($value->slugteam);
+                }
+            }
+            $c = $c+1;
+        }
+        
         $t = array();
-        $t[0] = $cholamais;
-        $t[1] = $estacaoutd;
-        $t[2] = $jacuipense;
-        $t[3] = $voebem;
-        $t[4] = $thikoac;
-        $t[5] = $dexolas;
-        $t[6] = $baselfc;
         
-        for($i = 0; $i<6; $i++){
-            for($j = $i+1; $j<7; $j++){
+        for($i = 0; $i<$final; $i++){
+            $t[$i] = array(
+                "nome" => $squad[$i]['time']['nome'],
+                "cartoleiro" => $squad[$i]['time']['nome_cartola'],
+                "parcial" => $this->getPartial($squad[$i]['atletas']));
+        }
+                
+        for($i = 0; $i<$final-1; $i++){
+            for($j = $i+1; $j<$final; $j++){
                 if($t[$j]['parcial'] > $t[$i]['parcial']){
                     $aux = $t[$i];
                     $t[$i] = $t[$j];
@@ -185,9 +98,106 @@ class Partial extends CI_Controller {
                 "t4" => $t[3],
                 "t5" => $t[4],
                 "t6" => $t[5],
-                "t7" => $t[6]);
+                "t7" => $t[6],
+                "t8" => $t[7]);
         
         return $teams;
+    }
+    
+    public function monthpartial($partial) {
+        
+        $json = $this->getleague();
+        
+        $t = array();
+        
+        $c = 0;        
+        foreach ($json['times'] as $equipe) {
+            $t[$c] = $equipe;
+            $c++;
+        }
+        
+        foreach ($partial as $team) {
+            for($i = 0; $i<$c; $i++){
+                if($t[$i]['nome'] == $team['nome']){
+                    $t[$i]['pontos']['mes'] = $t[$i]['pontos']['mes'] + $team['parcial'];
+                }
+            }
+        }
+        
+        for($i = 0; $i<$c-1; $i++){
+            for($j = $i+1; $j<$c; $j++){
+                if($t[$j]['pontos']['mes'] > $t[$i]['pontos']['mes']){
+                    $aux = $t[$i];
+                    $t[$i] = $t[$j];
+                    $t[$j] = $aux;
+                }
+            }
+        }
+        
+        for($i = 0; $i<$c; $i++){
+            $t[$i]['pontos']['mes'] = number_format($t[$i]['pontos']['mes'], 2);
+        }
+        
+        $month = array(
+                "t1" => $t[0],
+                "t2" => $t[1],
+                "t3" => $t[2],
+                "t4" => $t[3],
+                "t5" => $t[4],
+                "t6" => $t[5],
+                "t7" => $t[6],
+                "t8" => $t[7]);
+        
+        return $month;
+        
+    }
+    
+    public function overallpartial($partial) {
+        
+        $json = $this->getleague();
+        
+        $t = array();
+        
+        $c = 0;        
+        foreach ($json['times'] as $equipe) {
+            $t[$c] = $equipe;
+            $c++;
+        }
+        
+        foreach ($partial as $team) {
+            for($i = 0; $i<$c; $i++){
+                if($t[$i]['nome'] == $team['nome']){
+                    $t[$i]['pontos']['campeonato'] = $t[$i]['pontos']['campeonato'] + $team['parcial'];
+                }
+            }
+        }
+        
+        for($i = 0; $i<$c-1; $i++){
+            for($j = $i+1; $j<$c; $j++){
+                if($t[$j]['pontos']['campeonato'] > $t[$i]['pontos']['campeonato']){
+                    $aux = $t[$i];
+                    $t[$i] = $t[$j];
+                    $t[$j] = $aux;
+                }
+            }
+        }
+        
+        for($i = 0; $i<$c; $i++){
+            $t[$i]['pontos']['campeonato'] = number_format($t[$i]['pontos']['campeonato'], 2);
+        }
+        
+        $overall = array(
+                "t1" => $t[0],
+                "t2" => $t[1],
+                "t3" => $t[2],
+                "t4" => $t[3],
+                "t5" => $t[4],
+                "t6" => $t[5],
+                "t7" => $t[6],
+                "t8" => $t[7]);
+        
+        return $overall;
+        
     }
     
     public function getSquad($slug) {
@@ -249,6 +259,36 @@ class Partial extends CI_Controller {
         
     }
     
+    public function getleague() {
+        
+        $url = 'https://api.cartolafc.globo.com/auth/liga/gt-grades-league-2017';
+        
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_POST, false);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+        curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+        curl_setopt($ch, CURLOPT_HTTPHEADER ,[
+          'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
+          'Content-Type: application/json',
+          'X-GLB-Token: '.$this->session->userdata('glbId'),
+        ]);
+        $result = curl_exec($ch);
+        
+        if ($result === FALSE) {
+            die(curl_error($ch));
+        }
+        
+        curl_close($ch);
+        
+        $json = json_decode($result, true);
+        
+        return $json;
+    }
     
     public function islogged() {
         if ($this->session->userdata('logged') === TRUE){

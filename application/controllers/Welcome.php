@@ -7,9 +7,14 @@ class Welcome extends CI_Controller {
         if($this->islogged()){
             
             if($this->uptodate()){
+                $this->load->model('CurrentModel');
+                $current = new CurrentModel();
+                
+                $currentinfo = $current->search();
                 $json = $this->getstatus();
                 $delivery = $json['status_mercado'];
-                $msg = array("status" => $delivery);
+                
+                $msg = array("status" => $delivery, "current" => $currentinfo);
                 
                 $this->load->view('template/header');
                 $this->load->view('super/home', $msg);
@@ -65,7 +70,7 @@ class Welcome extends CI_Controller {
         
         $this->checknewteam($league);
         $this->checkoverall($league);
-        $this->checkinfo($league);
+        $this->checkmonth($league);
         
         if($this->setstatus($league)){
             return true;
@@ -117,8 +122,14 @@ class Welcome extends CI_Controller {
                 if($ranking->save($rankingdata)){
                 }
             }
-            
-            
+        }
+    }
+    
+    public function checkmonth($league) {
+        $this->load->model('RankingModel');
+        $ranking = new RankingModel();
+        
+        foreach ($league['times'] as $leagueteam) {
             $aux = $ranking->search($leagueteam['time_id'], 1);
             
             if($aux){
@@ -143,43 +154,6 @@ class Welcome extends CI_Controller {
         }
     }
     
-    public function checkinfo($league) {
-        $this->load->model('RankingModel');
-        $this->load->model('DetailModel');
-        $this->load->model('TeamModel');
-        
-        $ranking = new RankingModel();
-        $detail = new DetailModel();
-        $team = new TeamModel();
-        
-        if($league['ranking']['mes'] != $current['currentmonth']){
-            $finished = $ranking->listing(1);
-            
-            $detaildata['iddetail'] = null;
-            $detaildata['month'] = $current['currentmonth'];
-            $detaildata['champion'] = null;
-            $detaildata['worse'] = null;
-            
-            $cont = 1;
-            
-            foreach ($finished as $value) {
-                switch ($cont) {
-                    case 1:
-                        $obj = $team->search($value['team']);
-                        $detaildata['champion'] = $obj['namecoach'];
-                        break;
-                    case 7:
-                        $obj = $team->search($value['team']);
-                        $detaildata['worse'] = $obj['namecoach'];
-                        break;
-                }
-                $cont++;
-            }
-            
-            $detail->save($detaildata);
-        }
-    }
-    
     public function setstatus($league) {
         $this->load->model('MarketstatusModel');
         $status = new MarketstatusModel();
@@ -187,8 +161,12 @@ class Welcome extends CI_Controller {
         $json = $this->getstatus();
         
         $aux = null;
+        $c = 0;
         foreach ($league['times'] as $value) {
-            $aux = $value['ranking']['mes'];
+            if($c==0){
+                $aux = $value['ranking']['mes'];
+            }
+            $c++;
         }
         
         $mktstat = $status->search();
@@ -202,8 +180,6 @@ class Welcome extends CI_Controller {
             return true;
         }
     }
-    
-    
     
     public function getleague() {
         

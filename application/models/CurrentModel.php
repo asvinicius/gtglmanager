@@ -8,27 +8,22 @@ class CurrentModel extends CI_Model{
     function CurrentModel() {
         parent::__construct();
         $this->setIdcurrent(null);
-        $this->setIdmont(null);
-        $this->setIdchampion(null);
-        $this->setIdworse(null);
+        $this->setMonth(null);
+        $this->setChampion(null);
+        $this->setWorse(null);
     }
     
-    public function save($data = null) {
+    public function update($data = null) {
         if ($data != null) {
-            if ($this->db->insert('current', $data)) {
+            $this->db->where("idcurrent", $data['idcurrent']);
+            if ($this->db->update('current', $data)) {
                 return true;
             }
         }
     }
     
-    public function listing() {
-        $this->db->select('*');
-        $this->db->order_by("month", "asc");
-        return $this->db->get("current")->result();
-    }
-    
-    public function search($month) {
-        $this->db->where("month", $month);
+    public function search() {
+        $this->db->where("idcurrent", 1);
         return $this->db->get("current")->row_array();
     }
     

@@ -26,7 +26,10 @@ ini_set(“display_errors”, 0 );
             <div id="page-wrapper">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 class="page-header">Informações</h1>
+                        <h1 class="page-header">
+                            Informações
+                            <a href="<?= base_url('report/closemonth');?>" class="btn btn-primary pull-right">Concluir mês</a>
+                        </h1>
                     </div>
                 </div>
                 <div class="row">
@@ -47,7 +50,7 @@ ini_set(“display_errors”, 0 );
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                   <?php foreach ($detail as $line){ ?>
+                                                <?php foreach ($detail as $line){ ?>
                                                     <tr>
                                                         <td>
                                                             <?php 

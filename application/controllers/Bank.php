@@ -82,12 +82,13 @@ class Bank extends CI_Controller {
     }
     
     public function updatewallet() {
-        $this->load->model('MarketstatusModel');
-        $mktstatus = new MarketstatusModel();
+        $this->load->model('StatusoffModel');
         $this->load->model('WalletModel');
+            
+        $statusoff = new StatusoffModel();
         $wallet = new WalletModel();
         
-        $current = $mktstatus->search();
+        $current = $statusoff->search();
         
         $total = $wallet->search(0);
         
@@ -98,7 +99,7 @@ class Bank extends CI_Controller {
         $totaldata['accumulated'] = $total['accumulated']+20;
         
         if($wallet->update($totaldata)){
-            $here = $wallet->search($current['currentmonth']);
+            $here = $wallet->search($current['monthoff']);
             
             if($here){
                 $heredata['idwallet'] = $here['idwallet'];
@@ -112,7 +113,7 @@ class Bank extends CI_Controller {
                 }
             }else{
                 $heredata['idwallet'] = null;
-                $heredata['reference'] = $current['currentmonth'];
+                $heredata['reference'] = $current['monthoff'];
                 $heredata['collected'] = 20;
                 $heredata['premium'] = 0;
                 $heredata['accumulated'] = 20;
@@ -122,49 +123,6 @@ class Bank extends CI_Controller {
                 }
             }
         }
-    }
-    
-    public function conclude($reference) {
-        $this->load->model('WalletModel');
-        $this->load->model('PaymentModel');
-        
-        $wallet = new WalletModel();
-        $payment = new PaymentModel();
-        
-        $total = $wallet->search(0);
-        
-        $totaldata['idwallet'] = $total['idwallet'];
-        $totaldata['reference'] = $total['reference'];
-        $totaldata['collected'] = $total['collected'];
-        $totaldata['premium'] = $total['premium']+105;
-        $totaldata['accumulated'] = $total['accumulated']-105;
-        
-        if($wallet->update($totaldata)){
-            $current = $wallet->search($reference);
-            
-            $currentdata['idwallet'] = $current['idwallet'];
-            $currentdata['reference'] = $current['reference'];
-            $currentdata['collected'] = $current['collected'];
-            $currentdata['premium'] = $current['premium']+105;
-            $currentdata['accumulated'] = $current['accumulated']-105;
-            
-            if($wallet->update($currentdata)){                
-                for($i = 1; $i<8; $i++){
-                    
-                    $value = $payment->searchpayment($i);
-                    
-                    $paymentdata['idpayment'] = $value['idpayment'];
-                    $paymentdata['team'] = $value['team'];
-                    $paymentdata['amount'] = $value['amount']+1;
-
-                    if($payment->update($paymentdata)){
-                    }
-                }
-                redirect(base_url('bank'));
-            }
-            
-        }
-        
     }
     
     public function cancel() {
