@@ -37,11 +37,18 @@ ini_set(“display_errors”, 0 );
                  </ul>
                 <div class="navbar-default sidebar" role="navigation">
                     <div class="sidebar-nav navbar-collapse">
-                        <ul class="nav" id="side-menu">
-                            <li>
-                                <a title="Parciais" href="<?= base_url('partial');?>"><i class="fa fa-refresh fa-fw"></i> Parciais</a>
-                            </li>
-                        </ul>
+                        <?php if($status){
+                            switch ($status) {
+                                case 2: ?>
+                                    <ul class="nav" id="side-menu">
+                                        <li>
+                                            <a title="Parciais" href="<?= base_url('partial');?>"><i class="fa fa-refresh fa-fw"></i> Parciais</a>
+                                        </li>
+                                    </ul>
+                                <?php
+                                break;
+                            }
+                        }?>
                         <ul class="nav" id="side-menu">
                             <li>
                                 <a title="Geral" href="<?= base_url('overall');?>"><i class="fa fa-list-ol fa-fw"></i> Ranking Geral</a>

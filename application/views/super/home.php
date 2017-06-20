@@ -41,6 +41,12 @@ ini_set(“display_errors”, 0 );
                                     </div>
                                 <?php
                                 break;
+                                case 4: ?>
+                                    <div class="alert alert-warning text-center">
+                                        MERCADO EM MANUTENÇÃO!
+                                    </div>
+                                <?php
+                                break;
                             }
                         }?>
                     </div>

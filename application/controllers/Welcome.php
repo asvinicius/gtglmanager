@@ -16,7 +16,7 @@ class Welcome extends CI_Controller {
                 
                 $msg = array("status" => $delivery, "current" => $currentinfo);
                 
-                $this->load->view('template/header');
+                $this->load->view('template/header', $msg);
                 $this->load->view('super/home', $msg);
             }
         }
@@ -29,14 +29,18 @@ class Welcome extends CI_Controller {
         $mktstat = $status->search();
         $json = $this->getstatus();
         
-        if($json['rodada_atual'] == $mktstat['currentround']){
-            if($json['status_mercado'] == $mktstat['marketstatus']){
-                return true;
+        if($json['status_mercado'] == 4){
+            return true;
+        }else{
+            if($json['rodada_atual'] == $mktstat['currentround']){
+                if($json['status_mercado'] == $mktstat['marketstatus']){
+                    return true;
+                }else{
+                    return $this->updatedatabase();
+                }
             }else{
                 return $this->updatedatabase();
             }
-        }else{
-            return $this->updatedatabase();
         }
     }
     
