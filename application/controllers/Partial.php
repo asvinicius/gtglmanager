@@ -5,8 +5,10 @@ class Partial extends CI_Controller {
 
     public function index(){
         if($this->islogged()){
-            $this->load->view('template/header');
             $status = $this->getstatus();
+            $delivery = $status['status_mercado'];
+            $mis = array("status" => $delivery);
+            $this->load->view('template/header', $mis);
             
             switch($status['status_mercado']){
                 case 1:

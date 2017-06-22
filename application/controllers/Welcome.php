@@ -11,8 +11,8 @@ class Welcome extends CI_Controller {
                 $current = new CurrentModel();
                 
                 $currentinfo = $current->search();
-                $json = $this->getstatus();
-                $delivery = $json['status_mercado'];
+                
+                $delivery = $this->showpart();
                 
                 $msg = array("status" => $delivery, "current" => $currentinfo);
                 
@@ -44,6 +44,10 @@ class Welcome extends CI_Controller {
         }
     }
     
+    public function showpart() {
+        $json = $this->getstatus();
+        return $json['status_mercado'];
+    }
     public function getstatus() {
         
         $url = 'https://api.cartolafc.globo.com/mercado/status';
