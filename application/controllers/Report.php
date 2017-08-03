@@ -88,8 +88,8 @@ class Report extends CI_Controller {
         $totaldata['idwallet'] = $total['idwallet'];
         $totaldata['reference'] = $total['reference'];
         $totaldata['collected'] = $total['collected'];
-        $totaldata['premium'] = $total['premium']+120;
-        $totaldata['accumulated'] = $total['accumulated']-120;
+        $totaldata['premium'] = $total['premium']+105;
+        $totaldata['accumulated'] = $total['accumulated']-105;
         
         if($wallet->update($totaldata)){
             $current = $wallet->search($reference);
@@ -97,8 +97,8 @@ class Report extends CI_Controller {
             $currentdata['idwallet'] = $current['idwallet'];
             $currentdata['reference'] = $current['reference'];
             $currentdata['collected'] = $current['collected'];
-            $currentdata['premium'] = $current['premium']+120;
-            $currentdata['accumulated'] = $current['accumulated']-120;
+            $currentdata['premium'] = $current['premium']+105;
+            $currentdata['accumulated'] = $current['accumulated']-105;
             
             if($wallet->update($currentdata)){
                 $finished = $ranking->listing(1);
