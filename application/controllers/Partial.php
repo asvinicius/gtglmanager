@@ -99,8 +99,7 @@ class Partial extends CI_Controller {
                 "t3" => $t[2],
                 "t4" => $t[3],
                 "t5" => $t[4],
-                "t6" => $t[5],
-                "t7" => $t[6]);
+                "t6" => $t[5]);
         
         return $teams;
     }
@@ -145,8 +144,7 @@ class Partial extends CI_Controller {
                 "t3" => $t[2],
                 "t4" => $t[3],
                 "t5" => $t[4],
-                "t6" => $t[5],
-                "t7" => $t[6]);
+                "t6" => $t[5]);
         
         return $month;
         
@@ -192,8 +190,7 @@ class Partial extends CI_Controller {
                 "t3" => $t[2],
                 "t4" => $t[3],
                 "t5" => $t[4],
-                "t6" => $t[5],
-                "t7" => $t[6]);
+                "t6" => $t[5]);
         
         return $overall;
         
